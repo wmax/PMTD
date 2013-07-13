@@ -14,6 +14,11 @@ public class ClickFollowingCreep extends Creep {
 		super(cache.getSprite("simpleCreepTop.png"), x, y, centered);
 	}
 
+	/**
+	 * Selects the last clicked position as the target location
+	 * and constructs a path to that position.
+	 * Clears the path and reconstructs it if the last clicked position changes.
+	 */
 	@Override
 	protected void selectTarget() {
 		if( lastClickedPosition == null)

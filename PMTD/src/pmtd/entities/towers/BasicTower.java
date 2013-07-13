@@ -28,6 +28,11 @@ public class BasicTower extends Tower {
 		bullets.add(myBullet);
 	}
 	
-	public static int getPrize() { return prize; }
-	public static void setPrize(int prize) { BasicTower.prize = prize; }
+	public static int getPrize() { 
+		return prize;
+	}
+	
+	public static void setPrize(int prize) {
+		BasicTower.prize = prize;
+	}
 }

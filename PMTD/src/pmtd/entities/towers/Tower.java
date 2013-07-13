@@ -31,25 +31,42 @@ public abstract class Tower extends VisibleEntity {
 	protected int lastShotMade = 0;
 	protected SimpleBullet myBullet;
 
+	/**
+	 * Constructs a tower with a base and a top.
+	 * The top is the movable part which could point into the target's
+	 * direction for example.
+	 */
 	public Tower(Image base, Image top, Sound shotSound, int x, int y) throws SlickException {
 		super(base, x, y, true);
 		canon = top;
 		this.shotSound = shotSound;
 	}
 
+	/**
+	 * A tower's duty is to pick some targets and shoot them.
+	 */
 	public void update(GameContainer gc, int timeDelta) throws SlickException {
 		lastShotMade += timeDelta;
-		checkTargets(); aim(); fire();
+		checkTargets();
+		aim();
+		fire();
 	}
 	
+	/**
+	 * Remove targets from the current selection which are too far away.
+	 */
 	protected void checkTargets() {
-		if(targets.size() == 0)	return;
+		if(targets.size() == 0)
+			return;
 		
 		for(int i = 0; i < targets.size(); i++)
 			if( GameMath.calcRectDist(rect, targets.get(i).getRect()) > range )
 				targets.remove(targets.get(i));
 	}
 	
+	/**
+	 * Select some targets which are in range of the tower.
+	 */
 	protected void aim() {
 		if( targets.size() == 1)
 			calcDirection(rect, targets.get(0).getRect());
@@ -58,22 +75,20 @@ public abstract class Tower extends VisibleEntity {
 			return;
 		
 		for( Creep c : creeps )
-			if( targets.contains(c) ) {	// just do nothing
+			if( targets.contains(c) ) {	
+				// just do nothing because this creep is already selected
 			} else if( GameMath.calcRectDist(rect, c.getRect()) <= range )
 				if( targets.size() < maxTargetCount )
 					targets.add(c);
 	}
 
+	/**
+	 * Fire at all the previously selected targets if the cooldown is ready.
+	 */
 	protected void fire() throws SlickException {
-		if( targets.isEmpty() )
+		if( targets.isEmpty() || lastShotMade <= shotCooldown)
 			return;
 		
-		if( lastShotMade <= shotCooldown )
-			return;
-		
-	//	if( myBullet != null && !myBullet.getTargetHit() )
-//			return;
-
 		for( int i = 0; i < targets.size(); i++ ) {
 			Creep c = targets.get(i);
 			shoot(c);
@@ -91,9 +106,14 @@ public abstract class Tower extends VisibleEntity {
 	}
 	
 	public void render(Graphics pen) {
+		// let the ancestor draw the base
 		super.render(pen);
+		
+		// draw the canon ( top )
 		canon.setRotation((float) direction);
 		canon.draw(rect.getX(), rect.getY());
+		
+		// draw a circle which identifies the shot range
 		pen.setColor(Color.gray);
 		pen.setLineWidth(1);
 		pen.draw( new Circle(rect.getCenterX(), rect.getCenterY(), range) );

@@ -16,19 +16,6 @@ import pmtd.entities.towers.Tower;
 import pmtd.gui.Gui;
 import pmtd.util.SpriteCache;
 
-/**
- * Ein Grundgerüst für unsere Towerdefense.
- * Einfach diese Klasse ausführen und schon zeigt sich ein 
- * schwarzes Fenster mit einen kleinen Kreis.
- * 
- * Mit Escape kann man das "Spiel" schließen.
- * Mit Pfeil-Hoch kann man den Kreis in Bewegung setzen.
- * Mit Pfeil-Runter kann man den kreis anhalten.
- * Dieser bewegt sich Horizontal über den Bildschirm hin und her.
- * 
- * @author max
- *
- */
 public class TDGame extends BasicGame {
 	private TiledMap map;
 	private Gui gui;
@@ -75,16 +62,23 @@ public class TDGame extends BasicGame {
 		gui = new Gui(new Rectangle(0, 0, map.getWidth()*64, map.getHeight()*64));
 		
 		for( Vector2f v : waypoints)
-			if( pathShape == null )	pathShape = new Path(v.x, v.y);
-			else					pathShape.lineTo(v.x, v.y);
+			if( pathShape == null )
+				pathShape = new Path(v.x, v.y);
+			else
+				pathShape.lineTo(v.x, v.y);
 	}
 
 	@Override
 	public void update(GameContainer gc, int timeDelta) throws SlickException {
 		handleInput(gc);
-		if( spawningInitiated ) spawnCreep(timeDelta);
+		
+		if( spawningInitiated )
+			spawnCreep(timeDelta);
+		
 		manageBullets();
-		if( creeps.size() > 0) manageCreeps();
+		
+		if( creeps.size() > 0)
+			manageCreeps();
 		
 		for( Creep c : creeps )
 			c.update(gc, timeDelta);
@@ -114,7 +108,8 @@ public class TDGame extends BasicGame {
 			if( c.getHealth() <= 0 ) {
 				money += c.getBounty();
 				score++;
-			} else if( pos.distance(end) < 1 ) lifes--;
+			} else if( pos.distance(end) < 1 )
+				lifes--;
 		
 			if( c.getHealth() <= 0 || pos.distance(end) < 1)
 				creeps.remove(c);
@@ -149,7 +144,9 @@ public class TDGame extends BasicGame {
 	}
 
 	private void buyTower(int x, int y) throws SlickException {
-		if( money < BasicTower.getPrize() ) return;
+		if( money < BasicTower.getPrize() )
+			return;
+		
 		towers.add( new BasicTower(x, y, true) );
 		money -= BasicTower.getPrize();
 	}
@@ -169,7 +166,7 @@ public class TDGame extends BasicGame {
 			t.render(pen);
 		
 		renderGui(gc, pen);
-		gui.render(gc, pen);
+//		gui.render(gc, pen);
 	}
 	
 	private void renderGui(GameContainer gc, Graphics pen) {

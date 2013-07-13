@@ -13,9 +13,8 @@ import org.newdawn.slick.geom.Vector2f;
 import pmtd.util.SpriteCache;
 
 /**
- * Darstellbare Objekte/Subjekte des Spiels sollen von dieser
- * Klasse erben, vorallem alle Tower und Creeps.
- * 
+ * Represents all visible objects.
+ * Objects like towers and creeps should extend this class.
  */
 public abstract class VisibleEntity {
 	protected static SpriteCache cache = SpriteCache.instanceOf();
@@ -26,6 +25,10 @@ public abstract class VisibleEntity {
 	protected Rectangle rect;
 	protected double direction = 0;
 
+	/**
+	 * Spawns an entity on a certain position with a certain look.
+	 *
+	 */
 	public VisibleEntity(Image theImage, int x, int y, boolean centered ) throws SlickException {
 		image = theImage;
 		if( centered ) {
@@ -72,5 +75,9 @@ public abstract class VisibleEntity {
 		image.draw(rect.getX(), rect.getY());
 	}
 	
+	/**
+	 * Subclasses should implement the entity's logic here.
+	 * This method should be called in the game loop for every entity then. 
+	 */
 	public abstract void update(GameContainer gc, int timeDelta) throws SlickException;
 }

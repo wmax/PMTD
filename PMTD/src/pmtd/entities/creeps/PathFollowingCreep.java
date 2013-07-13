@@ -37,5 +37,4 @@ public class PathFollowingCreep extends Creep {
 	public static void setWaypoints(ArrayList<Vector2f> waypoints) {
 		PathFollowingCreep.waypoints = waypoints;
 	}
-
 }

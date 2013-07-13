@@ -2,21 +2,19 @@ package pmtd.gui;
 
 import java.util.ArrayList;
 
-import javax.swing.Box.Filler;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.ShapeFill;
-import org.newdawn.slick.fills.GradientFill;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
-import org.newdawn.slick.svg.Gradient;
-import org.newdawn.slick.svg.LinearGradientFill;
 
+/**
+ * This class is not finished yet.
+ * It's purpose is to factor out the gui code from TDGame.
+ * @author max
+ *
+ */
 public class Gui {
 	private ArrayList<Image> images = new ArrayList<Image>();
 	

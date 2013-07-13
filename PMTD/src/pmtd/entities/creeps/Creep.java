@@ -21,6 +21,10 @@ public abstract class Creep extends VisibleEntity {
 		return health;
 	}
 	
+	/**
+	 * Defines the default behaviour of a creep.
+	 * The creep's duty is to select a target and move towards it.
+	 */
 	public void update(GameContainer gc, int timeDelta) {
 		selectTarget();
 		move();
@@ -32,9 +36,21 @@ public abstract class Creep extends VisibleEntity {
 		super.render(pen);
 	}
 
+	/**
+	 * Because selecting a target can be very different depending on
+	 * the creep's breed, this behaviour should be implemented in the subclass of the creep.
+	 */
 	protected abstract void selectTarget();
 	
-	public int getBounty() { return bounty; }
-	public void setBounty(int bounty) { this.bounty = bounty; }
-	public int getHealth() { return health; }
+	public int getBounty() {
+		return bounty;
+	}
+	
+	public void setBounty(int bounty) {
+		this.bounty = bounty;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
 }
