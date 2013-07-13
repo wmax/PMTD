@@ -1,0 +1,40 @@
+10
+
+dir
+4
+https://studi.f4.htw-berlin.de/svn/s0525721/TowerDefense/PM-TD/libs/lwjgl-2.8.4/native
+https://studi.f4.htw-berlin.de/svn/s0525721/TowerDefense
+
+
+
+2012-06-19T12:38:41.561787Z
+3
+s0525721
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+67bdae1e-6c40-4e69-8733-5368840556e5
+
+linux
+dir
+
+macosx
+dir
+
+solaris
+dir
+
+windows
+dir
+

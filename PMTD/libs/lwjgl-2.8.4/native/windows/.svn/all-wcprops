@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows
+END
+jinput-raw.dll
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/jinput-raw.dll
+END
+jinput-raw_64.dll
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/jinput-raw_64.dll
+END
+lwjgl64.dll
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/lwjgl64.dll
+END
+OpenAL64.dll
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/OpenAL64.dll
+END
+lwjgl.dll
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/lwjgl.dll
+END
+OpenAL32.dll
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/OpenAL32.dll
+END
+jinput-dx8_64.dll
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/jinput-dx8_64.dll
+END
+jinput-dx8.dll
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/s0525721/TowerDefense/!svn/ver/3/PM-TD/libs/lwjgl-2.8.4/native/windows/jinput-dx8.dll
+END
