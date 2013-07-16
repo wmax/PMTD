@@ -8,15 +8,34 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
+import com.artemis.Entity;
+import com.artemis.EntitySystem;
+import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
+
+import pmtd.components.Health;
+import pmtd.components.Position;
+import pmtd.components.Sprite;
+import pmtd.components.Velocity;
+import pmtd.components.Waypoints;
 import pmtd.entities.bullets.SimpleBullet;
 import pmtd.entities.creeps.Creep;
 import pmtd.entities.creeps.PathFollowingCreep;
 import pmtd.entities.towers.BasicTower;
 import pmtd.entities.towers.Tower;
 import pmtd.gui.Gui;
+import pmtd.systems.MovementSystem;
+import pmtd.systems.RenderingSystem;
+import pmtd.systems.WaypointFollowingSystem;
 import pmtd.util.SpriteCache;
 
 public class TDGame extends BasicGame {
+	
+	// integrating artemis
+	private World world = new World();
+	private EntitySystem renderingSystem;
+	
 	private TiledMap map;
 	private Gui gui;
 	
@@ -42,6 +61,15 @@ public class TDGame extends BasicGame {
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		
+		//integrating artemis
+		world.setManager(new GroupManager());
+        world.setManager(new TagManager());
+        world.setSystem(new MovementSystem());
+        world.setSystem(new WaypointFollowingSystem());
+        renderingSystem = world.setSystem(new RenderingSystem(gc), true);
+        world.initialize();
+
 		gc.setVSync(true);
 		
 		SpriteCache.instanceOf().addResourceLocation("./resources/sprites/");
@@ -70,6 +98,10 @@ public class TDGame extends BasicGame {
 
 	@Override
 	public void update(GameContainer gc, int timeDelta) throws SlickException {
+		//integrating artemis
+        world.setDelta(timeDelta);
+        world.process();
+
 		handleInput(gc);
 		
 		if( spawningInitiated )
@@ -127,12 +159,29 @@ public class TDGame extends BasicGame {
 		
 		if(i.isKeyPressed(Input.KEY_T))
 			buyTower(i.getMouseX(), i.getMouseY());
+		
+		if(i.isKeyPressed(Input.KEY_R)) {
+			Entity e = world.createEntity();
+			e.addComponent(new Position(i.getMouseX(), i.getMouseY(), 0));
+			e.addComponent(new Sprite("sBase.png"));
+			e.addComponent(new Sprite("sTop.png"));
+			e.addToWorld();
+			
+		}
 	}
 
 	private void spawnCreep(int timeDelta) throws SlickException {		
 		lastCreepSpawned += timeDelta;
 
-		if( lastCreepSpawned > 600 && level > creepsSpawned ) {
+		if( lastCreepSpawned > 600 && level > creepsSpawned ) {		
+			Entity e = world.createEntity();
+			e.addComponent(new Position(100, 300, 180));
+			e.addComponent(new Sprite("simpleCreepTop.png"));
+			e.addComponent(new Health(20 + level * 5));
+			e.addComponent(new Velocity());
+			e.addComponent(new Waypoints(waypoints, 0));
+			e.addToWorld();
+			
 			creeps.add( new PathFollowingCreep(20 + level * 5, true) );
 			creepsSpawned++;
 			lastCreepSpawned = 0;
@@ -153,6 +202,7 @@ public class TDGame extends BasicGame {
 
 	@Override
 	public void render(GameContainer gc, Graphics pen) throws SlickException {
+		
 		map.render(0, 0);
 	//	renderWay(gc, pen);
 
@@ -167,6 +217,7 @@ public class TDGame extends BasicGame {
 		
 		renderGui(gc, pen);
 //		gui.render(gc, pen);
+		renderingSystem.process();
 	}
 	
 	private void renderGui(GameContainer gc, Graphics pen) {
