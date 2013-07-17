@@ -1,10 +1,13 @@
 package pmtd.systems;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Circle;
 
 import pmtd.components.Direction;
 import pmtd.components.Position;
+import pmtd.components.Range;
 import pmtd.components.Sprite;
 
 import com.artemis.Aspect;
@@ -13,27 +16,27 @@ import com.artemis.Entity;
 import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 
-public class RenderingSystem extends EntityProcessingSystem {
+public class RangeRenderingSystem extends EntityProcessingSystem {
 
 	@Mapper ComponentMapper<Position> pm;
-	@Mapper ComponentMapper<Direction> dm;
-    @Mapper ComponentMapper<Sprite> sm;
-    
+    @Mapper ComponentMapper<Range> rm;
+
     private GameContainer con;
 
-	public RenderingSystem(GameContainer container) {
-		super(Aspect.getAspectForAll(Position.class, Sprite.class, Direction.class));
+	public RangeRenderingSystem(GameContainer container) {
+		super(Aspect.getAspectForAll(Position.class, Range.class));
 		con = container;
 	}
 
 	@Override
 	protected void process(Entity entity) {
 		Graphics g = con.getGraphics();
-		Sprite sp = sm.getSafe(entity);
 		Position pos = pm.get(entity);
-		Direction dir = dm.get(entity);
+		Range range = rm.get(entity);
 		
-		sp.image.setRotation(dir.dir);
-		g.drawImage(sp.image, pos.x - 32, pos.y - 32);
+		System.err.println("Drawing dat range");
+		g.setColor(Color.gray);
+		g.setLineWidth(1);
+		g.draw( new Circle(pos.x, pos.y, range.range) );
 	}
 }

@@ -11,13 +11,11 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Circle;
 
 import pmtd.entities.VisibleEntity;
-import pmtd.entities.bullets.SimpleBullet;
 import pmtd.entities.creeps.Creep;
 import pmtd.util.GameMath;
 
 public abstract class Tower extends VisibleEntity {
 	protected static ArrayList<Creep> creeps;
-	protected static ArrayList<SimpleBullet> bullets;
 
 	protected Image canon;
 	protected Sound shotSound;
@@ -29,7 +27,6 @@ public abstract class Tower extends VisibleEntity {
 
 	protected ArrayList<Creep> targets = new ArrayList<Creep>();
 	protected int lastShotMade = 0;
-	protected SimpleBullet myBullet;
 
 	/**
 	 * Constructs a tower with a base and a top.
@@ -123,9 +120,5 @@ public abstract class Tower extends VisibleEntity {
 	
 	public static void setCreeps(ArrayList<Creep> creeps) {
 		Tower.creeps = creeps;
-	}
-
-	public static void setBullets(ArrayList<SimpleBullet> bullets) {
-		Tower.bullets = bullets;
 	}
 }
