@@ -23,6 +23,9 @@ public class MovementSystem extends EntityProcessingSystem {
         Position pos = pm.get(e);
         Velocity velocity = vm.get(e);
        
+        if(velocity == null)
+        	return;
+        
         pos.x += velocity.vecX;
         pos.y += velocity.vecY;
     }

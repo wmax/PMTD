@@ -2,6 +2,7 @@ package pmtd.systems;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import pmtd.TDGame;
 import pmtd.components.Damage;
 import pmtd.components.Health;
 import pmtd.components.Position;
@@ -14,13 +15,14 @@ import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 
 public class ImpactSystem extends EntityProcessingSystem {
-
+	TDGame theGame;
     @Mapper ComponentMapper<Position> pm;
     @Mapper ComponentMapper<Target> tm;
     @Mapper ComponentMapper<Damage> dm;
 
-    public ImpactSystem() {
+    public ImpactSystem(TDGame tdGame) {
         super(Aspect.getAspectForAll(Position.class, Target.class, Damage.class));
+        theGame = tdGame;
     }
 
     @Override
@@ -41,6 +43,8 @@ public class ImpactSystem extends EntityProcessingSystem {
         	e.deleteFromWorld();
         	
         	if(enemyHealth.health <= 0) {
+        		theGame.money += 20;
+        		theGame.score++;
         		target.target.deleteFromWorld();
         	}
         }

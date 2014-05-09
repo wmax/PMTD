@@ -22,14 +22,14 @@ import pmtd.components.Sprite;
 import pmtd.components.Target;
 import pmtd.components.Velocity;
 import pmtd.components.Waypoints;
-import pmtd.entities.creeps.Creep;
-import pmtd.entities.towers.Tower;
 import pmtd.systems.AttackingSystem;
+import pmtd.systems.BackGroundRenderingSystem;
 import pmtd.systems.ImpactSystem;
 import pmtd.systems.MovementSystem;
 import pmtd.systems.RangeRenderingSystem;
 import pmtd.systems.RenderingSystem;
 import pmtd.systems.RotationSystem;
+import pmtd.systems.TrackingSystem;
 import pmtd.systems.VelocitySystem;
 import pmtd.systems.WaypointFollowingSystem;
 import pmtd.util.SpriteCache;
@@ -43,25 +43,24 @@ import com.artemis.managers.TagManager;
 public class TDGame extends BasicGame {
 	
 	// integrating artemis
-	private World world = new World();
-	private EntitySystem renderingSystem;
-	private EntitySystem rangeRenderingSystem;
+	public World world = new World();
+	public EntitySystem renderingSystem;
+	public EntitySystem rangeRenderingSystem;
 	
-	private TiledMap map;
+	public TiledMap map;
 	
-	private ArrayList<Creep> creeps = new ArrayList<Creep>();
-
-	private int lifes = 10;
-	private int money = 100;
-	private int score = 0;
-	private int level = 1;
+	public int lifes = 10;
+	public int money = 100;
+	public int score = 0;
+	public int level = 1;
 	
-	private boolean spawningInitiated = false;
-	private int creepsSpawned = 0;
-	private int lastCreepSpawned = 0;
+	public boolean spawningInitiated = false;
+	public int creepsSpawned = 0;
+	public int lastCreepSpawned = 0;
 	
-	protected ArrayList<Vector2f> waypoints = new ArrayList<Vector2f>();
-	protected Path pathShape;
+	public ArrayList<Vector2f> waypoints = new ArrayList<Vector2f>();
+	public Path pathShape;
+	public BackGroundRenderingSystem backGroundRenderingSystem;
 			
 	public TDGame(String title) throws SlickException {
 		super(title);
@@ -74,13 +73,15 @@ public class TDGame extends BasicGame {
 		world.setManager(new GroupManager());
         world.setManager(new TagManager());
         world.setSystem(new MovementSystem());
-        world.setSystem(new WaypointFollowingSystem());
+        world.setSystem(new WaypointFollowingSystem(this));
         world.setSystem(new AttackingSystem(world));
         world.setSystem(new VelocitySystem());
         world.setSystem(new RotationSystem());
-        world.setSystem(new ImpactSystem());
+        world.setSystem(new ImpactSystem(this));
+        world.setSystem(new TrackingSystem(world));
         renderingSystem = world.setSystem(new RenderingSystem(gc), true);
         rangeRenderingSystem = world.setSystem(new RangeRenderingSystem(gc), true);
+        backGroundRenderingSystem = world.setSystem(new BackGroundRenderingSystem(gc), true);
 
         world.initialize();
         
@@ -99,13 +100,10 @@ public class TDGame extends BasicGame {
 		// the last point's position is outside the map to
 		// produce the illusion that creeps acutally leave the map
 		waypoints.add(new Vector2f(96, 650));
-
-		Tower.setCreeps(creeps);
 	}
 
 	@Override
 	public void update(GameContainer gc, int timeDelta) throws SlickException {
-		//integrating artemis
         world.setDelta(timeDelta);
         world.process();
 
@@ -113,27 +111,6 @@ public class TDGame extends BasicGame {
 		
 		if( spawningInitiated )
 			spawnCreep(timeDelta);
-				
-		if( creeps.size() > 0)
-			manageCreeps();
-	}
-
-	private void manageCreeps() {		
-		Vector2f end = waypoints.get(waypoints.size() - 1);
-
-		for( int i = 0; i < creeps.size(); i++) {
-			Creep c = creeps.get(i);
-			Vector2f pos = new Vector2f(c.getRect().getCenter());
-			
-			if( c.getHealth() <= 0 ) {
-				money += c.getBounty();
-				score++;
-			} else if( pos.distance(end) < 1 )
-				lifes--;
-		
-			if( c.getHealth() <= 0 || pos.distance(end) < 1)
-				creeps.remove(c);
-		}
 	}
 
 	public void handleInput(GameContainer gc) throws SlickException {
@@ -154,7 +131,6 @@ public class TDGame extends BasicGame {
 			Position pos = new Position(i.getMouseX(), i.getMouseY());
 			e.addComponent(pos);
 			e.addComponent(new Sprite("sBase.png"));
-			e.addComponent(new Direction(90));
 			e.addToWorld();
 			
 			// the top
@@ -162,13 +138,13 @@ public class TDGame extends BasicGame {
 			e.addComponent(pos);
 			e.addComponent(new Direction(0));
 			e.addComponent(new Sprite("sTop.png"));			
-			e.addComponent(new Range(100));
-			e.addComponent(new Cooldown(1000));
+			e.addComponent(new Range(300));
+			e.addComponent(new Cooldown(200));
 			e.addToWorld();
 		}
 	}
 
-	private void spawnCreep(int timeDelta) throws SlickException {		
+	private void spawnCreep(int timeDelta) throws SlickException {
 		lastCreepSpawned += timeDelta;
 
 		if( lastCreepSpawned > 600 && level > creepsSpawned ) {
@@ -177,7 +153,7 @@ public class TDGame extends BasicGame {
 			e.addComponent(new Position((int)waypoints.get(0).x, (int)waypoints.get(0).y));
 			e.addComponent(new Sprite("simpleCreepTop.png"));
 			e.addComponent(new Health(20 + level * 5));
-			e.addComponent(new Velocity(1));
+			e.addComponent(new Velocity(2));
 			e.addComponent(new Direction(0));
 			e.addComponent(new Waypoints(waypoints, 0));
 			e.addComponent(new Target((int)waypoints.get(0).x, (int)waypoints.get(0).y));
@@ -186,7 +162,7 @@ public class TDGame extends BasicGame {
 			
 			creepsSpawned++;
 			lastCreepSpawned = 0;
-		} else if( level == creepsSpawned && creeps.size() == 0) {
+		} else if( level == creepsSpawned && world.getManager(GroupManager.class).getEntities("Creeps").isEmpty()) {
 			spawningInitiated = false;
 			creepsSpawned = 0;
 			level++;
@@ -197,13 +173,9 @@ public class TDGame extends BasicGame {
 	public void render(GameContainer gc, Graphics pen) throws SlickException {
 		
 		map.render(0, 0);
-	//	renderWay(gc, pen);
-		
-		for( Creep c : creeps )	
-			c.render(pen);
 				
 		renderGui(gc, pen);
-
+		backGroundRenderingSystem.process();
 		renderingSystem.process();
 		rangeRenderingSystem.process();
 	}

@@ -2,7 +2,6 @@ package pmtd.systems;
 
 import org.newdawn.slick.geom.Vector2f;
 
-import pmtd.components.Direction;
 import pmtd.components.Position;
 import pmtd.components.Target;
 import pmtd.components.Velocity;
@@ -35,7 +34,7 @@ public class VelocitySystem extends EntityProcessingSystem {
         
         Vector2f moveTarget = target.getTarget();
 
-        // if the target's positions hasnt changed do not proceed
+        // if the target's positions hasn't changed do not proceed
         if(pos.x == moveTarget.x && pos.y == moveTarget.y)
         	return;
         

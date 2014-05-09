@@ -2,6 +2,7 @@ package pmtd.systems;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import pmtd.TDGame;
 import pmtd.components.Position;
 import pmtd.components.Target;
 import pmtd.components.Waypoints;
@@ -13,13 +14,15 @@ import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 
 public class WaypointFollowingSystem extends EntityProcessingSystem {
+	TDGame tdGame;
 
 	@Mapper ComponentMapper<Waypoints> wm;
     @Mapper ComponentMapper<Position> pm;
     @Mapper ComponentMapper<Target> tm;
 
-	public WaypointFollowingSystem() {
+	public WaypointFollowingSystem(TDGame tdGame) {
 		super(Aspect.getAspectForAll(Position.class, Waypoints.class));
+		this.tdGame = tdGame;
 	}
 
 	@Override
@@ -40,7 +43,9 @@ public class WaypointFollowingSystem extends EntityProcessingSystem {
 			
 			if(start.distance(moveTarget) <= 1)
 				wps.current += 1;
-		} else
+		} else {
+			this.tdGame.lifes--;
 			entity.deleteFromWorld();
+		}
 	}
 }

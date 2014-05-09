@@ -61,6 +61,7 @@ public class AttackingSystem extends EntityProcessingSystem{
 				dir.dir = (float) (vn.getTheta() + 90);
 				
 				spawnSimpleBullet(creep, pos, cd);
+				break;
 			}
 		}
 	}
@@ -73,7 +74,6 @@ public class AttackingSystem extends EntityProcessingSystem{
 		Entity bullet = world.createEntity();
 		bullet.addComponent(new Damage(10));
 		bullet.addComponent(new Position((int)pos.x, (int)pos.y));
-		bullet.addComponent(new Direction(0));
 		bullet.addComponent(new Target(e));
 		bullet.addComponent(new Velocity(3));
 		
