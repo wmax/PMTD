@@ -28,15 +28,18 @@ public class WaypointFollowingSystem extends EntityProcessingSystem {
 	@Override
 	protected void process(Entity entity) {
 		Waypoints wps = wm.get(entity);
-		Position pos = pm.get(entity);
+		Position pos = pm.getSafe(entity);
 		Target target = tm.get(entity);
+		
+		if(pos == null)
+			return;
 		
 		if(wps.current < wps.waypoints.size()) {
 			Vector2f moveTarget = wps.waypoints.get(wps.current);
 			Vector2f start = new Vector2f(pos.x, pos.y);
 
 			if(target.lastX != moveTarget.x || target.lastY != moveTarget.y) {
-				System.err.println("Adding target to creep");
+//				System.err.println("Adding target to creep");
 				target.lastX = (int)moveTarget.x;
 				target.lastY = (int)moveTarget.y;
 			}

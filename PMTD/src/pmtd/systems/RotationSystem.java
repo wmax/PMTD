@@ -29,7 +29,7 @@ public class RotationSystem extends EntityProcessingSystem {
         Direction dir = dm.get(e);
         Target target = tm.get(e);
 
-        Vector2f turnToTarget = target.getTarget();
+        Vector2f turnToTarget = target.getPosition();
         
 		Vector2f vn = new Vector2f(pos.x, pos.y);
 		vn.sub(turnToTarget).normalise().negateLocal();

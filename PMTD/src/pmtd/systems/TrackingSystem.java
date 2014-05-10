@@ -2,6 +2,7 @@ package pmtd.systems;
 
 import org.newdawn.slick.SlickException;
 
+import pmtd.components.Id;
 import pmtd.components.Position;
 import pmtd.components.Target;
 
@@ -24,14 +25,17 @@ public class TrackingSystem extends EntityProcessingSystem{
 	protected void process(Entity e) {
 		Target t = tm.getSafe(e);
 		
-		if(t.target == null)
+		if(t.entity == null)
 			return;
 
-		Position tPos = t.target.getComponent(Position.class);
+		Position tPos = t.entity.getComponent(Position.class);
+		Position ePos = e.getComponent(Position.class);
 		
-		if(tPos == null)
+		if(tPos == null) {
+			System.err.println("Bullet " + e.getComponent(Id.class).id + "- null");
 			return;
-		
+		}
+		System.err.println("Bullet " + e.getComponent(Id.class).id + "- " + tPos.x + " " + tPos.y + "\tpos: " + ePos.x + " " + ePos.y);
 		t.lastX = (int) tPos.x;
 		t.lastY = (int) tPos.y;
 	}

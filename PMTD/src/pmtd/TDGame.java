@@ -52,7 +52,7 @@ public class TDGame extends BasicGame {
 	public int lifes = 10;
 	public int money = 100;
 	public int score = 0;
-	public int level = 1;
+	public int level = 2;
 	
 	public boolean spawningInitiated = false;
 	public int creepsSpawned = 0;
@@ -61,6 +61,7 @@ public class TDGame extends BasicGame {
 	public ArrayList<Vector2f> waypoints = new ArrayList<Vector2f>();
 	public Path pathShape;
 	public BackGroundRenderingSystem backGroundRenderingSystem;
+	private boolean paused = false;
 			
 	public TDGame(String title) throws SlickException {
 		super(title);
@@ -85,7 +86,8 @@ public class TDGame extends BasicGame {
 
         world.initialize();
         
-		gc.setVSync(true);
+		gc.setVSync(false);
+		gc.setTargetFrameRate(2);
 		
 		SpriteCache.instanceOf().addResourceLocation("./resources/sprites/");
 		map = new TiledMap("/resources/TestMap1.tmx");
@@ -104,10 +106,16 @@ public class TDGame extends BasicGame {
 
 	@Override
 	public void update(GameContainer gc, int timeDelta) throws SlickException {
+		handleInput(gc);
+
+		if(paused)
+			return;
+		
+		System.err.println("________________________________________");
+
         world.setDelta(timeDelta);
         world.process();
 
-		handleInput(gc);
 		
 		if( spawningInitiated )
 			spawnCreep(timeDelta);
@@ -116,13 +124,19 @@ public class TDGame extends BasicGame {
 	public void handleInput(GameContainer gc) throws SlickException {
 		Input i = gc.getInput();
 
+		if(i.isKeyDown(Input.KEY_P))
+			paused = true;
+		
+		if(i.isKeyDown(Input.KEY_R))
+			paused = false;
+		
 		if(i.isKeyPressed(Input.KEY_ESCAPE))
 			gc.exit();
 		
 		if(i.isKeyPressed(Input.KEY_C) && !spawningInitiated)
 			spawningInitiated = true;
 				
-		if(i.isKeyPressed(Input.KEY_R)) {
+		if(i.isKeyPressed(Input.KEY_T)) {
 			// the tower consists of two independent entities, which are 
 			// connected by their position
 			
@@ -138,8 +152,8 @@ public class TDGame extends BasicGame {
 			e.addComponent(pos);
 			e.addComponent(new Direction(0));
 			e.addComponent(new Sprite("sTop.png"));			
-			e.addComponent(new Range(300));
-			e.addComponent(new Cooldown(200));
+			e.addComponent(new Range(600));
+			e.addComponent(new Cooldown(7400));
 			e.addToWorld();
 		}
 	}
@@ -165,13 +179,12 @@ public class TDGame extends BasicGame {
 		} else if( level == creepsSpawned && world.getManager(GroupManager.class).getEntities("Creeps").isEmpty()) {
 			spawningInitiated = false;
 			creepsSpawned = 0;
-			level++;
+		//	level++;
 		}
 	}
 
 	@Override
 	public void render(GameContainer gc, Graphics pen) throws SlickException {
-		
 		map.render(0, 0);
 				
 		renderGui(gc, pen);

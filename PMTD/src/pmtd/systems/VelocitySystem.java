@@ -13,7 +13,7 @@ import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 
 /**
- * Calculate velocity the velocity for every moving entity depending on the target's position.
+ * Calculate the velocity for every moving entity depending on the target's position.
  * @author wmax
  *
  */
@@ -23,6 +23,7 @@ public class VelocitySystem extends EntityProcessingSystem {
     @Mapper ComponentMapper<Velocity> vm;
     @Mapper ComponentMapper<Target> tm;
 
+    float lastX, lastY;
     public VelocitySystem() {
         super(Aspect.getAspectForAll(Position.class, Velocity.class, Target.class));
     }
@@ -32,19 +33,25 @@ public class VelocitySystem extends EntityProcessingSystem {
         Position pos = pm.get(e);
         Target target = tm.getSafe(e);
         
-        Vector2f moveTarget = target.getTarget();
+        Vector2f moveTarget = target.getPosition();
+        
+        if(Math.abs(lastX - moveTarget.x) > 100 || Math.abs(lastY - moveTarget.y) > 100)
+//        	if(e.getId() == 2)
+//        	System.err.println(e.getId() + " " + moveTarget.toString());
 
         // if the target's positions hasn't changed do not proceed
         if(pos.x == moveTarget.x && pos.y == moveTarget.y)
         	return;
         
-        Velocity vel = vm.get(e);
+        Velocity velocity = vm.get(e);
        
 		Vector2f start = new Vector2f(pos.x, pos.y);
 		Vector2f vn = new Vector2f(start);
-		vn.sub(moveTarget).normalise().negateLocal();
+		moveTarget.sub(vn).normalise();
 		
-		vel.vecX = vn.x * vel.speed;
-		vel.vecY = vn.y * vel.speed;
+		velocity.vecX = moveTarget.x * velocity.speed;
+		velocity.vecY = moveTarget.y * velocity.speed;
+		lastX = moveTarget.x;
+		lastY = moveTarget.y;
     }
 }

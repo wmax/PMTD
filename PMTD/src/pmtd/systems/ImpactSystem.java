@@ -31,8 +31,10 @@ public class ImpactSystem extends EntityProcessingSystem {
         Target target = tm.getSafe(e);
         Damage dmg = dm.getSafe(e);
         
-        if(target.getTarget().distance(new Vector2f(pos.x, pos.y)) < 2) {        	
-        	Health enemyHealth = target.target.getComponent(Health.class);
+        if(target.getPosition().distance(new Vector2f(pos.x, pos.y)) < 5) {   
+//        	e.deleteFromWorld();
+//        	return;
+        	Health enemyHealth = target.entity.getComponent(Health.class);
         	
         	if(enemyHealth == null) {
         		e.deleteFromWorld();
@@ -45,7 +47,7 @@ public class ImpactSystem extends EntityProcessingSystem {
         	if(enemyHealth.health <= 0) {
         		theGame.money += 20;
         		theGame.score++;
-        		target.target.deleteFromWorld();
+        		target.entity.deleteFromWorld();
         	}
         }
     }

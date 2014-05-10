@@ -5,10 +5,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 
-import pmtd.components.Direction;
 import pmtd.components.Position;
 import pmtd.components.Range;
-import pmtd.components.Sprite;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -34,7 +32,6 @@ public class RangeRenderingSystem extends EntityProcessingSystem {
 		Position pos = pm.get(entity);
 		Range range = rm.get(entity);
 		
-		System.err.println("Drawing dat range");
 		g.setColor(Color.gray);
 		g.setLineWidth(1);
 		g.draw( new Circle(pos.x, pos.y, range.range) );
